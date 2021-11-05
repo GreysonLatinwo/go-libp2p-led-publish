@@ -4,6 +4,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -19,6 +22,8 @@ const DiscoveryInterval = time.Hour
 
 // DiscoveryServiceTag is used in our mDNS advertisements to discover other chat peers.
 const DiscoveryServiceTag = "pubsub-chat-example"
+
+var chatRoom *ChatRoom
 
 func main() {
 	// parse some flags to set our nickname and the room to join
@@ -55,27 +60,29 @@ func main() {
 	room := *roomFlag
 
 	// join the chat room
-	cr, err := JoinChatRoom(ctx, ps, h.ID(), nick, room)
+	chatRoom, err = JoinChatRoom(ctx, ps, h.ID(), nick, room)
 	if err != nil {
 		panic(err)
 	}
-
 	// draw the UI
-	ui := NewChatUI(cr)
+	//ui := NewChatUI(cr)
 	addrs := ""
 	for _, addr := range h.Addrs() {
 		addrs += addr.String() + " "
 	}
-	ui.displayChatMessage(&ChatMessage{Message: addrs, SenderID: string(h.ID()), SenderNick: "Your IP"})
-	if err = ui.Run(); err != nil {
-		printErr("error running text UI: %s", err)
-	}
+	http.HandleFunc("/", httpHandler)
+	http.HandleFunc("/setColor", httpSetColorHandler)
+	log.Fatal(http.ListenAndServe("192.168.1.39:80", nil))
+	//ui.displayChatMessage(&ChatMessage{Message: addrs, SenderID: string(h.ID()), SenderNick: "Your IP"})
+	//if err = ui.Run(); err != nil {
+	//	printErr("error running text UI: %s", err)
+	//}
 }
 
 // printErr is like fmt.Printf, but writes to stderr.
-func printErr(m string, args ...interface{}) {
-	fmt.Fprintf(os.Stderr, m, args...)
-}
+//func printErr(m string, args ...interface{}) {
+//	fmt.Fprintf(os.Stderr, m, args...)
+//}
 
 // defaultNick generates a nickname based on the $USER environment variable and
 // the last 8 chars of a peer ID.
@@ -95,13 +102,38 @@ type discoveryNotifee struct {
 }
 
 // HandlePeerFound connects to peers discovered via mDNS. Once they're connected,
-// the PubSub system will automatically start interacting with them if they also
+// the PubSub system will automatically start interacting with them if they also~`	`
 // support PubSub.
 func (n *discoveryNotifee) HandlePeerFound(pi peer.AddrInfo) {
 	//fmt.Printf("discovered new peer %s\n", pi.ID.Pretty())
-	err := n.h.Connect(context.Background(), pi)
+	n.h.Connect(context.Background(), pi)
+	//if err != nil {
+	//fmt.Printf("error connecting to peer %s: %s\n", pi.ID.Pretty(), err)
+	//}
+}
+
+type Page struct {
+	Title string
+	Body  []byte
+}
+
+func httpHandler(w http.ResponseWriter, r *http.Request) {
+	rawPage, err := ioutil.ReadFile("colorPickerPage.html")
 	if err != nil {
-		//fmt.Printf("error connecting to peer %s: %s\n", pi.ID.Pretty(), err)
+		fmt.Printf("error reading html colorpicker page: %v", err)
+	}
+	fmt.Fprint(w, string(rawPage))
+}
+
+func httpSetColorHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		data, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			fmt.Println("error:", err)
+			return
+		}
+		fmt.Println(string(data))
+		chatRoom.Publish(string(data))
 	}
 }
 
