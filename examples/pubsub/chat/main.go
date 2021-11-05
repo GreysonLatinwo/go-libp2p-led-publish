@@ -72,7 +72,7 @@ func main() {
 	}
 	http.HandleFunc("/", httpHandler)
 	http.HandleFunc("/setColor", httpSetColorHandler)
-	log.Fatal(http.ListenAndServe("192.168.1.39:80", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:80", nil))
 	//ui.displayChatMessage(&ChatMessage{Message: addrs, SenderID: string(h.ID()), SenderNick: "Your IP"})
 	//if err = ui.Run(); err != nil {
 	//	printErr("error running text UI: %s", err)
