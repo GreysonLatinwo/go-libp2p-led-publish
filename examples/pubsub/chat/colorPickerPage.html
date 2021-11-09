@@ -90,13 +90,13 @@
                 hue2 = HEXtoHSL(color2).h
                 hue3 = HEXtoHSL(color3).h
 
-                setColor = String(colorType+","+hue1+","+hue2+","+hue3+","+brightness/10)
+                setColor = String(colorType+","+hue1+","+hue2+","+hue3+","+brightness)
 
                 console.log(setColor)
 
                 if (setColor != prevColorSet){
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", 'setColor', true);
+                    xhr.open("POST", 'http://192.168.1.27/setColor', true);
                     xhr.send(setColor);
                     prevColorSet = setColor
                 }
@@ -108,13 +108,13 @@
 
                 rgbColor = HEXtoRGB(color)
 
-                setColor = String(colorType+","+rgbColor[0]+","+rgbColor[1]+","+rgbColor[2]+","+brightness/10)
+                setColor = String(colorType+","+rgbColor[0]+","+rgbColor[1]+","+rgbColor[2]+","+brightness)
 
                 console.log(setColor)
 
                 if (setColor != prevColorSet){
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", 'setColor', true);
+                    xhr.open("POST", 'http://192.168.1.27/setColor', true);
                     xhr.send(setColor);
                     prevColorSet = setColor
                 }
