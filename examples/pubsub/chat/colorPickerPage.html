@@ -79,6 +79,18 @@
                     l: l
                 };
             }
+            
+            function getGroup(){
+                var group = ""
+                let numPis = 9
+                for(var i = 1; i <= numPis; i++){
+                    if (document.getElementById("pi"+String(i)).checked){
+                        group += String(document.getElementById("pi"+String(i)).name)+","
+                    }
+                }
+                return group.substr(0,group.length-1)
+            }
+            
             var prevColorSet = ""
             function sendPreset(colorType, color1, color2, color3, brightness){
                 color1 = document.getElementById("color1").value
@@ -108,7 +120,7 @@
 
                 rgbColor = HEXtoRGB(color)
 
-                setColor = String(colorType+","+rgbColor[0]+","+rgbColor[1]+","+rgbColor[2]+","+brightness)
+                setColor = String(colorType+","+rgbColor[0]+","+rgbColor[1]+","+rgbColor[2]+","+brightness+getGroup())
 
                 console.log(setColor)
 
@@ -119,15 +131,12 @@
                     prevColorSet = setColor
                 }
             }
-            function toggleStaticPreset(){
-                console.log(document.getElementById('toggle-preset').checked)
-            }
         </script>
     </head>
     <body style="background-color:#222222; color: white">
         <br>
         <div class=" d-flex justify-content-center" style="width: 100%; justify-self: center;">
-            <input id="toggle-preset" type="checkbox" checked onclick="toggleStaticPreset()" data-toggle="toggle" data-size="lg" data-on="Preset" data-off="Static" data-onstyle="primary" data-offstyle="info">
+            <input id="toggle-preset" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="Preset" data-off="Static" data-onstyle="primary" data-offstyle="info">
         </div>
         <div class="d-flex justify-content-center">
             <div class="col justify-content-center" id="static" style="display: none;">
@@ -164,6 +173,26 @@
                 <br>
                 <div class="d-flex">
                     <button type="button" class="btn btn-primary btn-block" id="send" onclick="sendPreset('preset')">Set Preset</button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center" style="width: 100%;">
+            <div class="d-flex justify-content-center" style="width: 100%;">
+                <div class="col justify-content-center">
+                    <div class="d-flex justify-content-center"><input id="pi1" name="leftventpi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="LeftVent On" data-off="LeftVent Off" data-onstyle="primary" data-offstyle="secondary"></div><br>
+                    <div class="d-flex justify-content-center"><input id="pi2" name="rightventpi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="RightVent On" data-off="RightVent Off" data-onstyle="primary" data-offstyle="secondary"></div><br>
+                    <div class="d-flex justify-content-center"><input id="pi3" name="tvpi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="TV On" data-off="TV Off" data-onstyle="primary" data-offstyle="secondary"></div>
+                </div>
+                <div class="col">
+                    <div class="d-flex justify-content-center"><input id="pi4" name="tvstandpi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="TvStand On" data-off="TvStand Off" data-onstyle="primary" data-offstyle="secondary"></div><br>
+                    <div class="d-flex justify-content-center"><input id="pi5" name="fireplacepi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="FirePlace On" data-off="FirePlace Off" data-onstyle="primary" data-offstyle="secondary"></div><br>
+                    <div class="d-flex justify-content-center"><input id="pi6" name="counterpi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="Counter On" data-off="Counter Off" data-onstyle="primary" data-offstyle="secondary"></div>
+                </div>
+                <div class="col">
+                    <div class="d-flex justify-content-center"><input id="pi7" name="shelfmkiipi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="ShelfMKII On" data-off="ShelfMKII Off" data-onstyle="primary" data-offstyle="secondary"></div><br>
+                    <div class="d-flex justify-content-center"><input id="pi8" name="leftovenpi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="LeftOven On" data-off="LeftOven Off" data-onstyle="primary" data-offstyle="secondary"></div><br>
+                    <div class="d-flex justify-content-center"><input id="pi9" name="rightventpi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="RightOven On" data-off="RightOven Off" data-onstyle="primary" data-offstyle="secondary"></div>
                 </div>
             </div>
         </div>
