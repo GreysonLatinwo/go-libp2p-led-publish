@@ -102,7 +102,7 @@
                 hue2 = HEXtoHSL(color2).h
                 hue3 = HEXtoHSL(color3).h
 
-                setColor = String(colorType+","+hue1+","+hue2+","+hue3+","+brightness)
+                setColor = String(colorType+","+hue1+","+hue2+","+hue3+","+brightness+","+getGroup())
 
                 console.log(setColor)
 
@@ -120,7 +120,7 @@
 
                 rgbColor = HEXtoRGB(color)
 
-                setColor = String(colorType+","+rgbColor[0]+","+rgbColor[1]+","+rgbColor[2]+","+brightness+getGroup())
+                setColor = String(colorType+","+rgbColor[0]+","+rgbColor[1]+","+rgbColor[2]+","+brightness+","+getGroup())
 
                 console.log(setColor)
 
@@ -192,7 +192,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-center"><input id="pi7" name="shelfmkiipi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="ShelfMKII On" data-off="ShelfMKII Off" data-onstyle="primary" data-offstyle="secondary"></div><br>
                     <div class="d-flex justify-content-center"><input id="pi8" name="leftovenpi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="LeftOven On" data-off="LeftOven Off" data-onstyle="primary" data-offstyle="secondary"></div><br>
-                    <div class="d-flex justify-content-center"><input id="pi9" name="rightventpi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="RightOven On" data-off="RightOven Off" data-onstyle="primary" data-offstyle="secondary"></div>
+                    <div class="d-flex justify-content-center"><input id="pi9" name="rightovenpi" type="checkbox" checked data-toggle="toggle" data-size="lg" data-on="RightOven On" data-off="RightOven Off" data-onstyle="primary" data-offstyle="secondary"></div>
                 </div>
             </div>
         </div>
