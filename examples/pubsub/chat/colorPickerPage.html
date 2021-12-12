@@ -107,9 +107,16 @@
                 console.log(setColor)
 
                 if (setColor != prevColorSet){
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", 'http://192.168.1.27/setColor', true);
-                    xhr.send(setColor);
+                    //var xhr = new XMLHttpRequest();
+                    //xhr.open("POST", 'http://192.168.1.27/setColor', true);
+                    //xhr.send(setColor);
+
+                    fetch('/setColor', {
+                        method: 'post',
+                        body: setColor, 
+                        mode: "no-cors"
+                    })
+
                     prevColorSet = setColor
                 }
             }
@@ -126,7 +133,7 @@
 
                 if (setColor != prevColorSet){
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", 'http://192.168.1.27/setColor', true);
+                    xhr.open("POST", '/setColor', true);
                     xhr.send(setColor);
                     prevColorSet = setColor
                 }

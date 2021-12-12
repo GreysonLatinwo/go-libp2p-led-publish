@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
+	"strings"
 	"time"
 
 	"github.com/libp2p/go-libp2p"
@@ -21,14 +21,14 @@ import (
 const DiscoveryInterval = time.Hour
 
 // DiscoveryServiceTag is used in our mDNS advertisements to discover other chat peers.
-const DiscoveryServiceTag = "pubsub-chat-example"
+const DiscoveryServiceTag = "GreysonsLEDs"
 
 var chatRoom *ChatRoom
 
 func main() {
 	// parse some flags to set our nickname and the room to join
-	nickFlag := flag.String("nick", "", "nickname to use in chat. will be generated if empty")
-	roomFlag := flag.String("room", "awesome-chat-room", "name of chat room to join")
+	deviceFlag := flag.String("device", "WebServer", "Device name to use. Will be \"Default\" if empty")
+	roomFlag := flag.String("room", "LivingRoom", "name of the room to join")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -52,10 +52,12 @@ func main() {
 
 	// use the nickname from the cli flag, or a default if blank
 	nick := ""
-	if len(nick) != 0 {
-		nick += *nickFlag + "-"
+	ip := strings.Split(h.Addrs()[0].String(), "/")[2]
+	if len(*deviceFlag) != 0 {
+		nick += *deviceFlag + "-" + shortID(h.ID()) + "@" + ip
+	} else {
+		nick += defaultNick(h.ID()) + "@" + ip
 	}
-	nick += defaultNick(h.ID())
 	// join the room from the cli flag, or the flag default
 	room := *roomFlag
 
@@ -87,7 +89,7 @@ func main() {
 // defaultNick generates a nickname based on the $USER environment variable and
 // the last 8 chars of a peer ID.
 func defaultNick(p peer.ID) string {
-	return fmt.Sprintf("%s-%s", os.Getenv("USER"), shortID(p))
+	return fmt.Sprintf("%s-%s", "Default", shortID(p))
 }
 
 // shortID returns the last 8 chars of a base58-encoded peer id.
@@ -140,7 +142,7 @@ func httpSetColorHandler(w http.ResponseWriter, r *http.Request) {
 // setupDiscovery creates an mDNS discovery service and attaches it to the libp2p Host.
 // This lets us automatically discover peers on the same LAN and connect to them.
 func setupDiscovery(h host.Host) error {
-	// setup mDNS discovery to find local peers
+	// setup mDNS discovery
 	s := mdns.NewMdnsService(h, DiscoveryServiceTag, &discoveryNotifee{h: h})
 	return s.Start()
 }

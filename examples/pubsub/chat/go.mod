@@ -1,4 +1,4 @@
-module github.com/libp2p/go-libp2p/examples/pubsub/chat
+module github.com/libp2p/go-libp2p/examples/pubsub/LedServer
 
 go 1.16
 
