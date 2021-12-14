@@ -33,7 +33,7 @@ const PubSubListeningAddr = "/ip4/0.0.0.0/tcp/0"
 
 func main() {
 	// parse some flags to set our nickname and the room to join
-	deviceFlag := flag.String("device", "WebServer", "Device name to use. Will be \"Default\" if empty")
+	deviceFlag := flag.String("name", "WebServer", "Device name to use. Will be \"Default\" if empty")
 	roomFlag := flag.String("room", "LivingRoom", "name of the room to join")
 	webServerPortFlag := flag.Int("webport", 80, "Port for the webserver to listen on")
 	flag.Parse()
