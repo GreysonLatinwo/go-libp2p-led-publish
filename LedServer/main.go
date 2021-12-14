@@ -25,7 +25,9 @@ const DiscoveryServiceTag = "GreysonsLEDs"
 
 var chatRoom *ChatRoom
 
-const WebServer = "0.0.0.0:80"
+const WebServerAddr = "0.0.0.0"
+
+var WebServerPost int32
 
 const PubSubListeningAddr = "/ip4/0.0.0.0/tcp/0"
 
@@ -33,6 +35,7 @@ func main() {
 	// parse some flags to set our nickname and the room to join
 	deviceFlag := flag.String("device", "WebServer", "Device name to use. Will be \"Default\" if empty")
 	roomFlag := flag.String("room", "LivingRoom", "name of the room to join")
+	webServerPortFlag := flag.Int("webport", 80, "Port for the webserver to listen on")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -78,8 +81,8 @@ func main() {
 	http.HandleFunc("/favicon.ico", httpIconHandler)
 	http.HandleFunc("/setColor", httpSetColorHandler)
 	http.HandleFunc("/getPeers", httpGetPeersHandler)
-	fmt.Println("Listening on", WebServer)
-	log.Fatal(http.ListenAndServe(WebServer, nil))
+	fmt.Println("Listening on port", fmt.Sprint(*webServerPortFlag))
+	log.Fatal(http.ListenAndServe(WebServerAddr+":"+fmt.Sprint(*webServerPortFlag), nil))
 }
 
 // defaultNick generates a nickname based on the $USER environment variable and
@@ -103,11 +106,8 @@ type discoveryNotifee struct {
 // the PubSub system will automatically start interacting with them if they also~`	`
 // support PubSub.
 func (n *discoveryNotifee) HandlePeerFound(pi peer.AddrInfo) {
-	//fmt.Printf("discovered new peer %s\n", pi.ID.Pretty())
+	fmt.Printf("discovered new peer %s\n", pi.ID.Pretty())
 	n.h.Connect(context.Background(), pi)
-	//if err != nil {
-	//fmt.Printf("error connecting to peer %s: %s\n", pi.ID.Pretty(), err)
-	//}
 }
 
 type Page struct {

@@ -1,4 +1,4 @@
-# go-libp2p-pubsub chat example
+# go-libp2p-pubsub example
 
 This example project builds a chat room application using go-libp2p-pubsub. The app runs in the terminal,
 and uses a text UI to show messages from other peers:
@@ -10,11 +10,11 @@ the details of configuration.
 
 ## Running
 
-Clone this repo, then `cd` into the `examples/pubsub/chat` directory:
+Clone this repo, then `cd` into the `LedServer` directory:
 
 ```shell
-git clone https://github.com/libp2p/go-libp2p
-cd go-libp2p/examples/pubsub/chat
+git clone https://github.com/GreysonLatinwo/go-libp2p-led-publish
+cd go-libp2p-led-publish/LedServer
 ```
 
 Now you can either run with `go run`, or build and run the binary:
@@ -24,7 +24,7 @@ go run .
 
 # or, build and run separately
 go build .
-./chat
+./LedServer
 ```
 
 To set a nickname, use the `-nick` flag:

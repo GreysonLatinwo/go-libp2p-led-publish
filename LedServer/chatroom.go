@@ -94,7 +94,7 @@ func (cr *ChatRoom) ListPeers() []peer.ID {
 func (cr *ChatRoom) readLoop() {
 	c, err := net.Dial("tcp", LedServerIP)
 	if err != nil {
-		// maybe start the server now in the future
+		// maybe start the python server here in the future
 		fmt.Fprintln(os.Stderr, "Cannot connect to the LED server:", err)
 		return
 	}
