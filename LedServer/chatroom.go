@@ -110,6 +110,7 @@ func (cr *ChatRoom) readLoop() {
 		if err != nil {
 			continue
 		}
+		fmt.Printf("ClientMessage: %+v\n", *cm)
 		if _, err = c.Write([]byte(cm.Message)); err != nil {
 			c.Close()
 			c, err = net.Dial("tcp", LedServerIP)

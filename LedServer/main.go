@@ -81,7 +81,8 @@ func main() {
 	http.HandleFunc("/favicon.ico", httpIconHandler)
 	http.HandleFunc("/setColor", httpSetColorHandler)
 	http.HandleFunc("/getPeers", httpGetPeersHandler)
-	fmt.Println("Listening on port", fmt.Sprint(*webServerPortFlag))
+	fmt.Println("Hosting on", WebServerAddr+":"+fmt.Sprint(*webServerPortFlag))
+	fmt.Println("Self: " + chatRoom.nick)
 	log.Fatal(http.ListenAndServe(WebServerAddr+":"+fmt.Sprint(*webServerPortFlag), nil))
 }
 
@@ -146,7 +147,6 @@ func httpSetColorHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		fmt.Println("Connection from", r.RemoteAddr, "Request:", r.URL.Path)
-		fmt.Println(string(data))
 		chatRoom.Publish(string(data))
 	}
 }

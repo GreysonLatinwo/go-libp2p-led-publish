@@ -1,4 +1,4 @@
-module github.com/libp2p/go-libp2p/examples/pubsub/LedServer
+module github.com/libp2p/go-libp2p/examples/pubsub/LedClient
 
 go 1.16
 
