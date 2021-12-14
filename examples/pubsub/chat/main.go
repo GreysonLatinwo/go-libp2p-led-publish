@@ -25,6 +25,8 @@ const DiscoveryServiceTag = "GreysonsLEDs"
 
 var chatRoom *ChatRoom
 
+var WebServer = "0.0.0.0:80"
+
 func main() {
 	// parse some flags to set our nickname and the room to join
 	deviceFlag := flag.String("device", "WebServer", "Device name to use. Will be \"Default\" if empty")
@@ -74,17 +76,9 @@ func main() {
 	}
 	http.HandleFunc("/", httpHandler)
 	http.HandleFunc("/setColor", httpSetColorHandler)
-	log.Fatal(http.ListenAndServe("0.0.0.0:80", nil))
-	//ui.displayChatMessage(&ChatMessage{Message: addrs, SenderID: string(h.ID()), SenderNick: "Your IP"})
-	//if err = ui.Run(); err != nil {
-	//	printErr("error running text UI: %s", err)
-	//}
+	log.Fatal(http.ListenAndServe(WebServer, nil))
+	fmt.Println("Listening on", WebServer)
 }
-
-// printErr is like fmt.Printf, but writes to stderr.
-//func printErr(m string, args ...interface{}) {
-//	fmt.Fprintf(os.Stderr, m, args...)
-//}
 
 // defaultNick generates a nickname based on the $USER environment variable and
 // the last 8 chars of a peer ID.
@@ -125,6 +119,7 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("error reading html colorpicker page: %v", err)
 	}
 	fmt.Fprint(w, string(rawPage))
+	fmt.Println("Connection from", r.RemoteAddr, "Request:", r.URL.Path)
 }
 
 func httpSetColorHandler(w http.ResponseWriter, r *http.Request) {
