@@ -80,7 +80,7 @@ func main() {
 	http.HandleFunc("/", httpHandler)
 	http.HandleFunc("/favicon.ico", httpIconHandler)
 	http.HandleFunc("/setColor", httpSetColorHandler)
-	http.HandleFunc("/getPeers", httpGetPeersHandler)
+	http.HandleFunc("/peers", httpGetPeersHandler)
 	fmt.Println("Hosting on", WebServerAddr+":"+fmt.Sprint(*webServerPortFlag))
 	fmt.Println("Self: " + chatRoom.nick)
 	log.Fatal(http.ListenAndServe(WebServerAddr+":"+fmt.Sprint(*webServerPortFlag), nil))
