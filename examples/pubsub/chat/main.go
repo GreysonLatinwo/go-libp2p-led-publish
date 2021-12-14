@@ -25,7 +25,9 @@ const DiscoveryServiceTag = "GreysonsLEDs"
 
 var chatRoom *ChatRoom
 
-var WebServer = "0.0.0.0:80"
+const WebServer = "0.0.0.0:80"
+
+const PubSubListeningAddr = "/ip4/0.0.0.0/tcp/0"
 
 func main() {
 	// parse some flags to set our nickname and the room to join
@@ -36,7 +38,7 @@ func main() {
 	ctx := context.Background()
 
 	// create a new libp2p Host that listens on a random TCP port
-	h, err := libp2p.New(libp2p.ListenAddrStrings("/ip4/0.0.0.0/tcp/0"))
+	h, err := libp2p.New(libp2p.ListenAddrStrings(PubSubListeningAddr))
 	if err != nil {
 		panic(err)
 	}
@@ -76,8 +78,8 @@ func main() {
 	}
 	http.HandleFunc("/", httpHandler)
 	http.HandleFunc("/setColor", httpSetColorHandler)
-	log.Fatal(http.ListenAndServe(WebServer, nil))
 	fmt.Println("Listening on", WebServer)
+	log.Fatal(http.ListenAndServe(WebServer, nil))
 }
 
 // defaultNick generates a nickname based on the $USER environment variable and
