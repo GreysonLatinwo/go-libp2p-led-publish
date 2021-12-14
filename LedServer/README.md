@@ -1,14 +1,13 @@
-# go-libp2p-pubsub example
+# LedServer
 
-This example project builds a chat room application using go-libp2p-pubsub. The app runs in the terminal,
-and uses a text UI to show messages from other peers:
+This project builds a Led controller application using go-libp2p-pubsub. The app runs in the terminal, and hosts a webgui to control the LEDs. It There is also a Command line interface to see all peers and communications.
 
-![An animation showing three terminal windows, each running the example application.](./chat-example.gif)
+![An animation showing three terminal windows, each running the example application.](./LEDComms.gif)
 
 The goal of this example is to demonstrate the basic usage of the `PubSub` API, without getting into
 the details of configuration.
 
-## Running
+## Run Server
 
 Clone this repo, then `cd` into the `LedServer` directory:
 
@@ -20,31 +19,43 @@ cd go-libp2p-led-publish/LedServer
 Now you can either run with `go run`, or build and run the binary:
 
 ```shell
-go run .
-
-# or, build and run separately
 go build .
-./LedServer
+sudo ./LedServer
 ```
 
-To set a nickname, use the `-nick` flag:
+To set a nickname, use the `-name` flag:
 
 ```shell
-go run . -nick=zoidberg
+go run . -name=Dev1
 ```
 
 You can join a specific chat room with the `-room` flag:
 
 ```shell
-go run . -room=planet-express
+go run . -room=Living-Room
 ```
 
-It's usually more fun to chat with others, so open a new terminal and run the app again.
-If you set a custom chat room name with the `-room` flag, make sure you use the same one
-for both apps. Once the new instance starts, the two chat apps should discover each other 
-automatically using mDNS, and typing a message into one app will send it to any others that are open.
-
 To quit, hit `Ctrl-C`, or type `/quit` into the input field.
+
+## Run Client
+
+Clone this repo, then `cd` into the `CLILedClient` directory:
+
+```shell
+git clone https://github.com/GreysonLatinwo/go-libp2p-led-publish
+cd go-libp2p-led-publish/CLILedClient
+```
+
+Now you can either run with `go run`, or build and run the binary:
+
+```shell
+go run .
+
+# or, build and run separately
+
+go build .
+./LedClient
+```
 
 ## Code Overview
 
@@ -177,44 +188,4 @@ func (cr *ChatRoom) ListPeers() []peer.ID {
 }
 ```
 
-That's pretty much it for the `ChatRoom`! 
-
-Back in `main.go`, once we've created our `ChatRoom`, we pass it
-to `NewChatUI`, which constructs a three panel text UI for entering and viewing chat messages, because UIs
-are fun.
-
-The `ChatUI` is defined in [`ui.go`](./ui.go), and the interesting bit is in the `handleEvents` event loop
-method:
-
-```go
-func (ui *ChatUI) handleEvents() {
-	peerRefreshTicker := time.NewTicker(time.Second)
-	defer peerRefreshTicker.Stop()
-
-	for {
-		select {
-		case input := <-ui.inputCh:
-			// when the user types in a line, publish it to the chat room and print to the message window
-			err := ui.cr.Publish(input)
-			if err != nil {
-				printErr("publish error: %s", err)
-			}
-			ui.displaySelfMessage(input)
-
-		case m := <-ui.cr.Messages:
-			// when we receive a message from the chat room, print it to the message window
-			ui.displayChatMessage(m)
-
-		case <-peerRefreshTicker.C:
-			// refresh the list of peers in the chat room periodically
-			ui.refreshPeers()
-
-		case <-ui.cr.ctx.Done():
-			return
-
-		case <-ui.doneCh:
-			return
-		}
-	}
-}
-```
+That's pretty much it!
