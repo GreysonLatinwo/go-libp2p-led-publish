@@ -75,6 +75,7 @@ func main() {
 		addrs += addr.String() + " "
 	}
 	http.HandleFunc("/", httpHandler)
+	http.HandleFunc("/favicon.ico", httpIconHandler)
 	http.HandleFunc("/setColor", httpSetColorHandler)
 	http.HandleFunc("/getPeers", httpGetPeersHandler)
 	fmt.Println("Listening on", WebServer)
@@ -123,12 +124,18 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Connection from", r.RemoteAddr, "Request:", r.URL.Path)
 }
 
+func httpIconHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "favicon.ico")
+	fmt.Println("Connection from", r.RemoteAddr, "Request:", r.URL.Path)
+}
+
 func httpGetPeersHandler(w http.ResponseWriter, r *http.Request) {
-	var peersStr string
-	for _, val := range chatRoom.ListPeers() {
-		peersStr += val.String() + ","
+	var shortPeers []string
+	for _, peer := range chatRoom.ListPeers() {
+		shortPeers = append(shortPeers, shortID(peer))
 	}
-	fmt.Fprint(w, peersStr)
+	fmt.Fprint(w, "Self: "+chatRoom.nick+"\n", shortPeers)
+	fmt.Println("Connection from", r.RemoteAddr, "Request:", r.URL.Path)
 }
 
 func httpSetColorHandler(w http.ResponseWriter, r *http.Request) {
@@ -138,6 +145,7 @@ func httpSetColorHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("error:", err)
 			return
 		}
+		fmt.Println("Connection from", r.RemoteAddr, "Request:", r.URL.Path)
 		fmt.Println(string(data))
 		chatRoom.Publish(string(data))
 	}
