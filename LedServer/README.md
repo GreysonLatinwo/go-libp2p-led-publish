@@ -35,27 +35,9 @@ You can join a specific chat room with the `-room` flag:
 go run . -room=Living-Room
 ```
 
-To quit, hit `Ctrl-C`, or type `/quit` into the input field.
+visit http://localhost/ to use the web client
 
-## Run Client
-
-Clone this repo, then `cd` into the `CLILedClient` directory:
-
-```shell
-git clone https://github.com/GreysonLatinwo/go-libp2p-led-publish
-cd go-libp2p-led-publish/CLILedClient
-```
-
-Now you can either run with `go run`, or build and run the binary:
-
-```shell
-go run .
-
-# or, build and run separately
-
-go build .
-./LedClient
-```
+To quit, hit `Ctrl-C`
 
 ## Code Overview
 

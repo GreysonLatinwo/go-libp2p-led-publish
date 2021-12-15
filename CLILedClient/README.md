@@ -7,36 +7,6 @@ This project builds a Led controller application using go-libp2p-pubsub. The app
 The goal of this example is to demonstrate the basic usage of the `PubSub` API, without getting into
 the details of configuration.
 
-## Run Server
-
-Clone this repo, then `cd` into the `LedServer` directory:
-
-```shell
-git clone https://github.com/GreysonLatinwo/go-libp2p-led-publish
-cd go-libp2p-led-publish/LedServer
-```
-
-Now you can either run with `go run`, or build and run the binary:
-
-```shell
-go build .
-sudo ./LedServer
-```
-
-To set a nickname, use the `-name` flag:
-
-```shell
-go run . -name=Dev1
-```
-
-You can join a specific chat room with the `-room` flag:
-
-```shell
-go run . -room=Living-Room
-```
-
-To quit, hit `Ctrl-C`, or type `/quit` into the input field.
-
 ## Run Client
 
 Clone this repo, then `cd` into the `CLILedClient` directory:

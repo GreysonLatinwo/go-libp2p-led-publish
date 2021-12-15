@@ -50,6 +50,16 @@ You can start using go-libp2p in your Go application simply by adding imports fr
 import "github.com/libp2p/go-libp2p"
 ```
 
+Start the python LED server with 
+
+```shell
+sudo python3 setLeds.py
+
+#or if you dont have led, you can run the test server
+
+sudo python3 Test_setLeds.py
+```
+
 ### Examples
 
 Examples can be found in the [examples folder](examples).
