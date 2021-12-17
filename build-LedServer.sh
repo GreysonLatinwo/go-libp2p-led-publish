@@ -2,6 +2,4 @@
 
 cd LedServer
 go build
-cp LedServer ../WebServer
 cd ..
-
