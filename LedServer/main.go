@@ -74,6 +74,7 @@ func joinRoom(nickname string, room string) {
 	if err := setupDiscovery(h); err != nil {
 		panic(err)
 	}
+	fmt.Println("Discovery Service Tag:", DiscoveryServiceTag)
 
 	// use the nickname from the cli flag, or a default if blank
 	nick := ""
