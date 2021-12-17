@@ -68,7 +68,7 @@ def clientInputLoop(sock, fromaddr):
     while True:
         try:
             #read led data from the socket
-            clientData = sock.recv(128).decode('utf-8').strip() #expected format: 'type,R,G,B,Brightness[,names]'
+            clientData = sock.recv(256).decode('utf-8').strip() #expected format: 'type,R,G,B,Brightness[,names]'
             if clientData == '':
                 break
             dataSplit = clientData.split(',')
@@ -76,20 +76,21 @@ def clientInputLoop(sock, fromaddr):
             if (HOSTNAME not in dataSplit and 'all' not in dataSplit) or not is_clean(dataSplit):
                 print('ignoring:', clientData)
                 continue
-
-            #set brightness
-            if pixels.brightness != float(dataSplit[4])/(max(100, NUMLEDS)*1.33):
-                pixels.brightness = float(dataSplit[4])/(max(100, NUMLEDS)*1.33)
-                print("Brighness="+str(pixels.brightness))
             #if the preset is running then stop it
             if t1 and t1.is_alive:
                 stopPreset = True
                 t1.join()
             if dataSplit[0] == 'preset':
+                if pixels.brightness != float(dataSplit[10])/(max(100, NUMLEDS)*1.33):
+                    pixels.brightness = float(dataSplit[10])/(max(100, NUMLEDS)*1.33)
+                    print("Brighness="+str(pixels.brightness))
                 stopPreset = False
                 t1 = threading.Thread(target=preset, args=(dataSplit[1:10], (lambda: stopPreset),))
                 t1.start()
             elif dataSplit[0] == 'static':
+                if pixels.brightness != float(dataSplit[4])/(max(100, NUMLEDS)*1.33):
+                    pixels.brightness = float(dataSplit[4])/(max(100, NUMLEDS)*1.33)
+                    print("Brighness="+str(pixels.brightness))
                 pixels.fill((int(dataSplit[1]), int(dataSplit[2]), int(dataSplit[3])))
                 pixels.show()
             print(fromaddr,'->',clientData)
