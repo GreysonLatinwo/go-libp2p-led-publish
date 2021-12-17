@@ -31,9 +31,9 @@ def clientInputLoop(sock, fromaddr):
 
     def preset(rgb, stop_check):
         palette = [
-            fancy.CRGB(rgb[0], rgb[1], rgb[2]),
-            fancy.CRGB(rgb[3], rgb[4], rgb[5]),
-            fancy.CRGB(rgb[6], rgb[7], rgb[8]),
+            fancy.CRGB(rgb[0]/255, rgb[1]/255, rgb[2]/255),
+            fancy.CRGB(rgb[3]/255, rgb[4]/255, rgb[5]/255),
+            fancy.CRGB(rgb[6]/255, rgb[7]/255, rgb[8]/255),
         ]
 
         offset = 0  # Positional offset into color palette to get it to 'spin'
