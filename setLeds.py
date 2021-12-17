@@ -35,6 +35,11 @@ def clientInputLoop(sock, fromaddr):
             fancy.CRGB(rgb[3]/255, rgb[4]/255, rgb[5]/255),
             fancy.CRGB(rgb[6]/255, rgb[7]/255, rgb[8]/255),
         ]
+        print('color:')
+        print(rgb[0]/255, rgb[1]/255, rgb[2]/255)
+        print(rgb[3]/255, rgb[4]/255, rgb[5]/255)
+        print(rgb[6]/255, rgb[7]/255, rgb[8]/255)
+        print('')
 
         offset = 0  # Positional offset into color palette to get it to 'spin'
 
