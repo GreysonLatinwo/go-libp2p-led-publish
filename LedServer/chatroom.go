@@ -127,7 +127,7 @@ func (cr *ChatRoom) readLoop() {
 
 		switch strings.ToLower(cm.Message) {
 		case "/ping":
-			continue
+			cr.Publish("pong")
 		case "/quit":
 			return
 		default:

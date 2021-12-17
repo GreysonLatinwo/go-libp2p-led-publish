@@ -110,7 +110,10 @@ func (cr *ChatRoom) readLoop() {
 		case "/quit":
 			return
 		}
-
+		// dont propogate message if recieved from self.
+		if msg.ReceivedFrom == cr.self {
+			continue
+		}
 		// send valid messages onto the Messages channel
 		cr.Messages <- cm
 	}
