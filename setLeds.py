@@ -29,16 +29,11 @@ def clientInputLoop(sock, fromaddr):
         else:
             return True
 
-    def preset(preset, stop_check):
-        import colorsys
-        # Declare a 6-element RGB rainbow palette
-        rgb1 = colorsys.hsv_to_rgb(int(preset[0])/360, 1.0, 1.0)
-        rgb2 = colorsys.hsv_to_rgb(int(preset[1])/360, 1.0, 1.0)
-        rgb3 = colorsys.hsv_to_rgb(int(preset[2])/360, 1.0, 1.0)
+    def preset(rgb, stop_check):
         palette = [
-            fancy.CRGB(rgb1[0], rgb1[1], rgb1[2]),
-            fancy.CRGB(rgb2[0], rgb2[1], rgb2[2]),
-            fancy.CRGB(rgb3[0], rgb3[1], rgb3[2]),
+            fancy.CRGB(rgb[0], rgb[1], rgb[2]),
+            fancy.CRGB(rgb[3], rgb[4], rgb[5]),
+            fancy.CRGB(rgb[6], rgb[7], rgb[8]),
         ]
 
         offset = 0  # Positional offset into color palette to get it to 'spin'
@@ -62,7 +57,7 @@ def clientInputLoop(sock, fromaddr):
     BRIGHTNESS = 0.1
     pixels = neopixel.NeoPixel(board.D18, NUMLEDS, brightness=BRIGHTNESS, auto_write=False)
     stopPreset = False
-    t1 = threading.Thread(target=preset, args=([280, 180, 165], (lambda: stopPreset),))
+    t1 = threading.Thread(target=preset, args=([0,255,255,170,0,255,0,255,191], (lambda: stopPreset),))
     t1.start()
 
     while True:
@@ -73,7 +68,7 @@ def clientInputLoop(sock, fromaddr):
                 break
             dataSplit = clientData.split(',')
             #check if data is clean with no attempt to sanitize
-            if HOSTNAME not in dataSplit or not is_clean(dataSplit):
+            if (HOSTNAME not in dataSplit and 'all' not in dataSplit) or not is_clean(dataSplit):
                 print('ignoring:', clientData)
                 continue
 
@@ -87,7 +82,7 @@ def clientInputLoop(sock, fromaddr):
                 t1.join()
             if dataSplit[0] == 'preset':
                 stopPreset = False
-                t1 = threading.Thread(target=preset, args=(dataSplit[1:4], (lambda: stopPreset),))
+                t1 = threading.Thread(target=preset, args=(dataSplit[1:10], (lambda: stopPreset),))
                 t1.start()
             elif dataSplit[0] == 'static':
                 pixels.fill((int(dataSplit[1]), int(dataSplit[2]), int(dataSplit[3])))

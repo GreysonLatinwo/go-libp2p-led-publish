@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strings"
 
 	"github.com/libp2p/go-libp2p-core/peer"
 
@@ -16,6 +17,10 @@ import (
 const ChatRoomBufSize = 128
 
 const LedServerIP = "127.0.0.1:4444"
+
+var logBuffer []ChatMessage
+
+const logBufferSize = 128
 
 // ChatRoom represents a subscription to a single PubSub topic. Messages
 // can be published to the topic with ChatRoom.Publish, and received
@@ -67,6 +72,8 @@ func JoinChatRoom(ctx context.Context, ps *pubsub.PubSub, selfID peer.ID, nickna
 		Messages: make(chan *ChatMessage, ChatRoomBufSize),
 	}
 
+	logBuffer = make([]ChatMessage, 0, logBufferSize)
+
 	// start reading messages from the subscription in a loop
 	go cr.readLoop()
 	return cr, nil
@@ -110,28 +117,47 @@ func (cr *ChatRoom) readLoop() {
 		if err != nil {
 			continue
 		}
+
 		fmt.Printf("ClientMessage: %+v\n", *cm)
-		if _, err = c.Write([]byte(cm.Message)); err != nil {
-			c.Close()
-			c, err = net.Dial("tcp", LedServerIP)
-			if err != nil {
-				// maybe start the server now in the future
-				fmt.Fprintln(os.Stderr, "Cannot connect to the LED server:", err)
-				return
-			}
-			_, err = c.Write([]byte(cm.Message))
-			// we just opened this, if theres a problem now, fuck it give up...
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "Cannot connect to the LED server:", err)
-				return
+
+		if len(logBuffer) >= logBufferSize {
+			logBuffer = logBuffer[1:]
+		}
+		logBuffer = append(logBuffer, *cm)
+
+		switch strings.ToLower(cm.Message) {
+		case "/ping":
+			continue
+		case "/quit":
+			return
+		default:
+			if _, err = c.Write([]byte(cm.Message)); err != nil {
+				c.Close()
+				c, err = net.Dial("tcp", LedServerIP)
+				if err != nil {
+					fmt.Fprintln(os.Stderr, "Cannot connect to the LED server:", err)
+					return
+				}
+				_, err = c.Write([]byte(cm.Message))
+				// we just opened this, if theres a problem now, fuck it give up...
+				if err != nil {
+					fmt.Fprintln(os.Stderr, "Cannot connect to the LED server:", err)
+					return
+				}
 			}
 		}
+
+		// dont propogate message if recieved from self.
 		if msg.ReceivedFrom == cr.self {
 			continue
 		}
 		// send valid messages onto the Messages channel
 		cr.Messages <- cm
 	}
+}
+
+func getPubSubLogs() []ChatMessage {
+	return logBuffer
 }
 
 func topicName(roomName string) string {

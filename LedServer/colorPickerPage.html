@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Libp2p LED Color Picker</title>
+        <title>Distributed LEDs</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -98,27 +98,22 @@
                 color3 = document.getElementById("color3").value
                 brightness = document.getElementById("preset-brightness").value
 
-                hue1 = HEXtoHSL(color1).h
-                hue2 = HEXtoHSL(color2).h
-                hue3 = HEXtoHSL(color3).h
+                hue1 = HEXtoRGB(color1)
+                hue2 = HEXtoRGB(color2)
+                hue3 = HEXtoRGB(color3)
 
                 setColor = String(colorType+","+hue1+","+hue2+","+hue3+","+brightness+","+getGroup())
 
                 console.log(setColor)
 
-                if (setColor != prevColorSet){
-                    //var xhr = new XMLHttpRequest();
-                    //xhr.open("POST", 'http://192.168.1.27/setColor', true);
-                    //xhr.send(setColor);
+                fetch('/setColor', {
+                    method: 'post',
+                    body: setColor, 
+                    mode: "no-cors"
+                })
 
-                    fetch('/setColor', {
-                        method: 'post',
-                        body: setColor, 
-                        mode: "no-cors"
-                    })
-
-                    prevColorSet = setColor
-                }
+                //prevColorSet = setColor
+                
             }
 
             function sendColor(colorType){
@@ -131,13 +126,62 @@
 
                 console.log(setColor)
 
-                if (setColor != prevColorSet){
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", '/setColor', true);
-                    xhr.send(setColor);
-                    prevColorSet = setColor
-                }
+                fetch('/setColor', {
+                    method: 'post',
+                    body: setColor, 
+                    mode: "no-cors"
+                })
+
+                //prevColorSet = setColor
             }
+
+            function Ping() {
+                fetch('/ping', {
+                    method: 'post',
+                    mode: "no-cors"
+                }).then((response) => {
+                    response.text().then(console.log)
+                })
+            }
+
+            function getPeers() {
+                fetch('/peers', {
+                    method: 'get',
+                    mode: "no-cors"
+                }).then((response) => {
+                    response.text().then(console.log)
+                })
+            }
+
+            function printLogs() {
+                fetch('/logs', {
+                    method: 'get',
+                    mode: "no-cors"
+                }).then((response) => {
+                    response.text().then(console.log)
+                })
+            }
+            
+            function joinRoom(roomName) {
+                fetch('/join', {
+                    method: 'post',
+                    body: roomName, 
+                    mode: "no-cors"
+                })
+                .then((response) => {
+                    document.title = "Distributed LEDs - "+roomName
+                })
+            }
+
+            function SetTitle() {
+                fetch('/join', {
+                    method: 'get',
+                    mode: "no-cors"
+                }).then((response) => {
+                    response.text().then(roomName => document.title = "Distributed LEDs - "+roomName)
+                })
+            }
+            window.onload = SetTitle
         </script>
     </head>
     <body style="background-color:#222222; color: white">

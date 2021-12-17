@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
 	"github.com/libp2p/go-libp2p-core/peer"
 
@@ -102,6 +103,14 @@ func (cr *ChatRoom) readLoop() {
 		if err != nil {
 			continue
 		}
+
+		switch strings.ToLower(cm.Message) {
+		case "/ping":
+			cr.Publish("pong")
+		case "/quit":
+			return
+		}
+
 		// send valid messages onto the Messages channel
 		cr.Messages <- cm
 	}

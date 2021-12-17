@@ -2,7 +2,7 @@
 
 This project builds a Led controller application using go-libp2p-pubsub. The app runs in the terminal, and hosts a webgui to control the LEDs. It There is also a Command line interface to see all peers and communications.
 
-![An animation showing three terminal windows, each running the example application.](./LEDComms.gif)
+![An animation showing three terminal windows, each running the example application.](./example.gif)
 
 The goal of this example is to demonstrate the basic usage of the `PubSub` API, without getting into
 the details of configuration.
